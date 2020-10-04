@@ -14,7 +14,7 @@ RUN \
 			streamlink \
 			tzdata && \
 	echo "**** pip check ****" && \
-		pip3 --version \
+		pip3 --version && \
 	echo "**** install python packages ****" && \
 		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt && \
 	echo "**** basic youtube-dl check ****" && \
