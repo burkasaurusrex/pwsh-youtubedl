@@ -9,6 +9,7 @@ RUN \
 			bash \
 			curl \
 			ffmpeg \
+			libwebp-dev \
 			python3 \
 			python3-pip \
 			streamlink \
