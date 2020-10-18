@@ -9,11 +9,11 @@ RUN \
 			bash \
 			curl \
 			ffmpeg \
-			libwebp-dev \
 			python3 \
 			python3-pip \
 			streamlink \
-			tzdata && \
+			tzdata \
+			webp && \
 	echo "**** pip check ****" && \
 		pip3 --version && \
 	echo "**** install python packages ****" && \
