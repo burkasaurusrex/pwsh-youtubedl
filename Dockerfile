@@ -9,6 +9,7 @@ RUN \
 			bash \
 			curl \
 			ffmpeg \
+			mediainfo \
 			python3 \
 			python3-pip \
 			streamlink \
