@@ -1,1 +1,1 @@
-youtube-dl==2020.11.24
+youtube-dl==2020.11.26
