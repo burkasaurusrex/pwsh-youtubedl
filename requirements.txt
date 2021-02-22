@@ -1,1 +1,1 @@
-youtube-dl==2021.2.10
+youtube-dl==2021.2.22
