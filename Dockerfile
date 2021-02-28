@@ -9,22 +9,19 @@ RUN \
 		echo 'deb http://deb.debian.org/debian buster main' >| /etc/apt/sources.list && \
 		echo 'deb http://deb.debian.org/debian testing main' >> /etc/apt/sources.list && \
 		apt-get update && \
-	echo "**** remove gui ****" && \
-		apt-get purge '*x11*' libwayland-client0 libwayland-server0 && \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y && \
 		apt-get install -y \
 			bash \
 			curl \
-			mediainfo \
 			python3 \
 			python3-pip \
-			streamlink \
 			tzdata \
 			webp && \
 	echo "**** install testing packages ****" && \
 		apt-get -t testing install -y \
-			ffmpeg && \	
+			ffmpeg \
+			mediainfo && \	
 	echo "**** ffmpeg check ****" && \
 		ffmpeg -version && \
 	echo "**** pip check ****" && \
