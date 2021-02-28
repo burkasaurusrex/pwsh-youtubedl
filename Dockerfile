@@ -16,6 +16,7 @@ RUN \
 			curl \
 			python3 \
 			python3-pip \
+			python3-setuptools \
 			tzdata \
 			webp && \
 	echo "**** install testing packages ****" && \
