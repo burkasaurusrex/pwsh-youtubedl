@@ -1,8 +1,8 @@
 name: Auto approve and merge PRs by dependabot
 
 on:
-  pull_request
-  workflow_dispatch
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   autoapprove:
@@ -13,7 +13,7 @@ jobs:
         uses: hmarr/auto-approve-action@v2.0.0
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
-          github-token: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
+          github-token: ${{ secrets.GA_TOKEN }}
   automerge:
     name: Auto merge after successful checks
     needs: autoapprove
@@ -23,6 +23,6 @@ jobs:
         uses: pascalgn/automerge-action@v0.13.1
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACTIONS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GA_TOKEN }}
           MERGE_LABELS: dependencies
           MERGE_METHOD: rebase
