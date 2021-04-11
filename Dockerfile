@@ -14,6 +14,7 @@ RUN \
 		apt-get install -y \
 			bash \
 			curl \
+			dotnet-sdk-5.0 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
@@ -31,6 +32,9 @@ RUN \
 		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt && \
 	echo "**** basic youtube-dl check ****" && \
 		youtube-dl --version && \
+	echo "**** install nuget packages ****" && \	
+		dotnet add package Selenium.WebDriver && \
+		dotnet add package Selenium.Support && \	
 	echo "**** cleanup ****" && \
 		apt-get autoremove -y && \
 		apt-get clean && \
