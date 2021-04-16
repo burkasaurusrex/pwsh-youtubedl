@@ -9,18 +9,11 @@ RUN \
 		echo 'deb http://deb.debian.org/debian buster main' >| /etc/apt/sources.list && \
 		echo 'deb http://deb.debian.org/debian testing main' >> /etc/apt/sources.list && \
 		apt-get update && \
-	echo "**** set up msft package signing key ****" && \
-		wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb && \
-		dpkg -i /tmp/packages-microsoft-prod.deb && \
-		apt-get update && \
-		apt-get install -y apt-transport-https && \
-		apt-get update && \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y && \
 		apt-get install -y \
 			bash \
 			curl \
-			dotnet-sdk-5.0 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
@@ -30,6 +23,8 @@ RUN \
 		apt-get -t testing install -y \
 			ffmpeg \
 			mediainfo && \	
+	echo "**** install dotnet ****" && \
+		curl -s https://dot.net/v1/dotnet-install.sh | bash -s -c Current && \
 	echo "**** dotnet check ****" && \
 		dotnet --list-sdks && \
 	echo "**** install nuget packages ****" && \	
