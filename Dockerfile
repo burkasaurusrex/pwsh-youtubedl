@@ -34,9 +34,6 @@ RUN \
 		apt-get install -y dotnet-sdk-5.0 && \
 	echo "**** dotnet check ****" && \
 		dotnet --list-sdks && \
-	echo "**** install nuget packages ****" && \	
-		dotnet add package Selenium.WebDriver && \
-		dotnet add package Selenium.Support && \	
 	echo "**** ffmpeg check ****" && \
 		ffmpeg -version && \
 	echo "**** pip check ****" && \
