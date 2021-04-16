@@ -23,8 +23,15 @@ RUN \
 		apt-get -t testing install -y \
 			ffmpeg \
 			mediainfo && \	
-	echo "**** install dotnet ****" && \
-		curl -s https://dot.net/v1/dotnet-install.sh | bash -s -c Current && \
+	echo "**** set up msft package signing key ****" && \
+		cd /tmp && \
+		curl -O https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb && \
+		cd / && \
+		dpkg -i /tmp/packages-microsoft-prod.deb && \
+		apt-get update && \
+		apt-get install -y apt-transport-https && \
+		apt-get update && \
+		apt-get install -y dotnet-sdk-5.0 && \
 	echo "**** dotnet check ****" && \
 		dotnet --list-sdks && \
 	echo "**** install nuget packages ****" && \	
