@@ -33,7 +33,7 @@ RUN \
 		apt-get update && \
 		apt-get install -y dotnet-runtime-5.0 && \
 	echo "**** dotnet check ****" && \
-		dotnet --list-sdks && \
+		dotnet --info && \
 	echo "**** ffmpeg check ****" && \
 		ffmpeg -version && \
 	echo "**** pip check ****" && \
