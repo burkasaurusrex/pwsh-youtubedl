@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/powershell:lts-debian-buster-slim
+FROM mcr.microsoft.com/powershell:debian-buster-slim
 VOLUME /root/.local/share/powershell/Modules
 COPY . /
 RUN \
@@ -31,7 +31,7 @@ RUN \
 		apt-get update && \
 		apt-get install -y apt-transport-https && \
 		apt-get update && \
-		apt-get install -y dotnet-sdk-5.0 && \
+		apt-get install -y dotnet-runtime-5.0 && \
 	echo "**** dotnet check ****" && \
 		dotnet --list-sdks && \
 	echo "**** ffmpeg check ****" && \
