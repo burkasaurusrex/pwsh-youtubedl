@@ -14,9 +14,9 @@ jobs:
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           github-token: ${{ secrets.GA_TOKEN }}
-  automerge:
+  auto-merge:
     name: Auto merge after successful checks
-    needs: autoapprove
+    needs: auto-approve
     runs-on: ubuntu-latest
     steps:
       - name: Auto merge
