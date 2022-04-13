@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  autoapprove:
+  auto-approve:
     name: Auto Approve a PR by dependabot
     runs-on: ubuntu-latest
     steps:
