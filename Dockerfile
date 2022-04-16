@@ -20,12 +20,12 @@ RUN \
 			tzdata \
 			webp && \
 	echo "**** install testing packages ****" && \
-		apt-get -t testing install -y \
+		apt-get -t testing install -y --allow-remove-essential \
 			ffmpeg \
 			mediainfo && \	
 	echo "**** set up msft package signing key ****" && \
 	 	cd /tmp && \
-		curl -O https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb && \
+		curl -O https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb && \
 		cd / && \
 		dpkg -i /tmp/packages-microsoft-prod.deb && \
 		apt-get update && \
