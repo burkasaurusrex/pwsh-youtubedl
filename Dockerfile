@@ -1,22 +1,22 @@
-FROM mcr.microsoft.com/powershell:debian-buster-slim
+FROM mcr.microsoft.com/powershell:debian-bullseye-slim
 VOLUME /root/.local/share/powershell/Modules
 COPY . /
 RUN \
 	echo "**** set up apt ****" && \
-		echo 'APT::Default-Release "buster";' >| /etc/apt/apt.conf && \
+		echo 'APT::Default-Release "bullseye";' >| /etc/apt/apt.conf && \
 		echo 'APT::Install-Recommends "0";' >> /etc/apt/apt.conf && \
 		echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
-		echo 'deb http://deb.debian.org/debian buster main' >| /etc/apt/sources.list && \
+		echo 'deb http://deb.debian.org/debian bullseye main' >| /etc/apt/sources.list && \
 		echo 'deb http://deb.debian.org/debian testing main' >> /etc/apt/sources.list && \
 		apt-get update && \
 	echo "**** disable auth ****" && \
-		echo 'skip-authentication' >| /etc/pam.conf && \ 
+		# echo 'skip-authentication' >| /etc/pam.conf && \ 
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
 			bash \
 			curl \
-			# libxcrypt1 \
+			# libcrypt1 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
