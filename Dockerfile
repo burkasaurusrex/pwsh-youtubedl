@@ -20,10 +20,10 @@ RUN \
 			python3-setuptools \
 			tzdata \
 			webp && \
-	echo "**** install testing packages ****" && \
-		apt-get -t testing install -y \
-			ffmpeg \
-			mediainfo && \	
+	# echo "**** install testing packages ****" && \
+	#	apt-get -t testing install -y \
+	#		ffmpeg \
+	#		mediainfo && \	
 	# echo "**** set up msft package signing key ****" && \
 	# 	cd /tmp && \
 	#	curl -O https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb && \
@@ -33,21 +33,21 @@ RUN \
 	#	apt-get install -y apt-transport-https && \
 	#	apt-get update && \
 	#	apt-get install -y dotnet-runtime-5.0 && \
-	echo "**** dotnet check ****" && \
-		dotnet --info && \
-	echo "**** ffmpeg check ****" && \
-		ffmpeg -version && \
-	echo "**** pip check ****" && \
-		pip3 --version && \
-	echo "**** install python packages ****" && \
-		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt && \
-	echo "**** basic youtube-dl check ****" && \
-		youtube-dl --version && \
-	echo "**** cleanup ****" && \
+	# echo "**** dotnet check ****" && \
+	#	dotnet --info && \
+	# echo "**** ffmpeg check ****" && \
+	#	ffmpeg -version && \
+	# echo "**** pip check ****" && \
+	#	pip3 --version && \
+	# echo "**** install python packages ****" && \
+	#	pip3 install --no-cache-dir --upgrade --requirement /requirements.txt && \
+	# echo "**** basic youtube-dl check ****" && \
+	#	youtube-dl --version && \
+	# echo "**** cleanup ****" && \
 		# apt-get autoremove -y --allow-remove-essential && \
 		# apt-get clean && \
-		rm -rf \
-			/tmp/* \
-			/var/tmp/* \
-			/var/lib/apt/lists/*
+	#	rm -rf \
+	#		/tmp/* \
+	#		/var/tmp/* \
+	#		/var/lib/apt/lists/*
 ENTRYPOINT ["pwsh", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='Continue';"]
