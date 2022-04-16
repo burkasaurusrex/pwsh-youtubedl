@@ -45,7 +45,7 @@ RUN \
 		youtube-dl --version && \
 	echo "**** cleanup ****" && \
 		# apt-get autoremove -y --allow-remove-essential && \
-		apt-get clean && \
+		# apt-get clean && \
 		rm -rf \
 			/tmp/* \
 			/var/tmp/* \
