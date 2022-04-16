@@ -17,7 +17,7 @@ RUN \
 			apt-transport-https \ 
 			bash \
 			curl \
-			# libcrypt1 \
+			libxcrypt1 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
