@@ -14,10 +14,9 @@ RUN \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
-			apt-transport-https \ 
 			bash \
 			curl \
-			libxcrypt1 \
+			# libxcrypt1 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
