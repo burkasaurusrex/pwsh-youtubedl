@@ -14,6 +14,7 @@ RUN \
 		apt-get install -y \
 			bash \
 			curl \
+			libcrypt1 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
