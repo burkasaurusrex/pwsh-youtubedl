@@ -16,7 +16,7 @@ RUN \
 		apt-get install -y --allow-remove-essential \
 			bash \
 			curl \
-			# libcrypt1 \
+			libcrypt1 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
