@@ -10,8 +10,8 @@ RUN \
 		echo 'deb http://deb.debian.org/debian testing main' >> /etc/apt/sources.list && \
 		apt-get update && \
 	echo "**** install buster packages ****" && \
-		apt-get upgrade -y && \
-		apt-get install -y \
+		apt-get upgrade -y --allow-remove-essential && \
+		apt-get install -y --allow-remove-essential \
 			bash \
 			curl \
 			libcrypt1 \
