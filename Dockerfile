@@ -9,12 +9,14 @@ RUN \
 		echo 'deb http://deb.debian.org/debian buster main' >| /etc/apt/sources.list && \
 		echo 'deb http://deb.debian.org/debian testing main' >> /etc/apt/sources.list && \
 		apt-get update && \
+	echo "**** set up apt ****" && \
+		echo 'skip-authentication' >| /etc/pam.conf && \ 
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
 			bash \
 			curl \
-			libcrypt1 \
+			# libcrypt1 \
 			python3 \
 			python3-pip \
 			python3-setuptools \
