@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/powershell:debian-bullseye-slim
+# FROM mcr.microsoft.com/powershell:debian-bullseye-slim
+FROM mcr.microsoft.com/powershell:preview-debian-bullseye-slim
 VOLUME /root/.local/share/powershell/Modules
 COPY . /
 RUN \
