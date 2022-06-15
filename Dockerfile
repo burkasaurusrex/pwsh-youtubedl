@@ -13,6 +13,7 @@ RUN \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
+			aria2 \
 			bash \
 			curl \
 			python3 \
