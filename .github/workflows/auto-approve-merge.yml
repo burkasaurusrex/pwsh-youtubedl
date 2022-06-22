@@ -7,11 +7,13 @@ on:
 jobs:
   auto-approve:
     name: Auto Approve a PR by dependabot
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Auto approve
         uses: hmarr/auto-approve-action@v2
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+        if: github.actor == 'dependabot[bot]'
         with:
           github-token: "${{ secrets.GA_TOKEN }}"
   auto-merge:
