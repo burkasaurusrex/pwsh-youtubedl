@@ -21,7 +21,9 @@ RUN \
 			python3-setuptools \
 			sqlite3 \
 			tzdata \
-			webp && \
+			unzip \
+			webp \ 
+			zip && \
 	echo "**** install testing packages ****" && \
 		apt-get -t testing install -y --allow-remove-essential \
 			ffmpeg \
