@@ -16,7 +16,6 @@ RUN \
 			aria2 \
 			bash \
 			curl \
-			mkvtoolnix \
 			python3 \
 			python3-pip \
 			python3-setuptools \
@@ -25,11 +24,15 @@ RUN \
 			unzip \
 			webp \ 
 			zip && \
+	echo "**** pip check ****" && \
+		pip3 --version && \
 	echo "**** install testing packages ****" && \
 		apt-get -t testing install -y --allow-remove-essential \
 			ffmpeg \
 			mediainfo && \	
-	echo "**** set up msft package signing key ****" && \
+	echo "**** ffmpeg check ****" && \
+		ffmpeg -version && \			
+	echo "**** set up msft package signing key and install dotnet ****" && \
 	 	cd /tmp && \
 		curl -O https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb && \
 		cd / && \
@@ -40,10 +43,19 @@ RUN \
 		apt-get install -y dotnet-runtime-6.0 && \
 	echo "**** dotnet check ****" && \
 		dotnet --info && \
-	echo "**** ffmpeg check ****" && \
-		ffmpeg -version && \
-	echo "**** pip check ****" && \
-		pip3 --version && \
+	echo "**** download mkvtoolnix key and install ****" && \
+		cd /usr/share/keyrings && \
+		curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
+		cd / && \
+		echo 'deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bullseye main' >> /etc/apt/sources.list && \
+		echo 'deb-src [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bullseye main' >> /etc/apt/sources.list && \
+		apt-get update && \
+		apt-get install -y mkvtoolnix && \
+	echo "**** mkvtoolnix check ****" && \
+		mkvmerge --version && \		
+		mkvinfo --version && \
+		mkvextract --version && \
+		mkvpropedit --version && \
 	echo "**** install python packages ****" && \
 		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt && \
 	echo "**** basic youtube-dl check ****" && \
