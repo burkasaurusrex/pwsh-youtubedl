@@ -1,4 +1,4 @@
-streamlink==4.3.0
+streamlink==5.0.1
 youtube-dl==2021.12.17
 youtube-dlc==2020.11.11.post3
 yt-dlp==2022.9.1
