@@ -58,7 +58,7 @@ RUN \
 		mkvextract --version && \
 		mkvpropedit --version && \
 	echo "**** install python packages ****" && \
-		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt && \
+		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
 	echo "**** basic youtube-dl check ****" && \
 		youtube-dl --version && \
 	echo "**** cleanup ****" && \
