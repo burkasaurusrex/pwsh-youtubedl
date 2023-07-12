@@ -4,10 +4,10 @@ VOLUME /root/.local/share/powershell/Modules
 COPY . /
 RUN \
 	echo "**** set up apt ****" && \
-		echo 'APT::Default-Release "bullseye";' >| /etc/apt/apt.conf && \
+		echo 'APT::Default-Release "stable";' >| /etc/apt/apt.conf && \
 		echo 'APT::Install-Recommends "0";' >> /etc/apt/apt.conf && \
 		echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
-		echo 'deb http://deb.debian.org/debian bullseye main' >| /etc/apt/sources.list && \
+		echo 'deb http://deb.debian.org/debian stable main' >| /etc/apt/sources.list && \
 		echo 'deb http://deb.debian.org/debian testing main' >> /etc/apt/sources.list && \
 		apt-get update && \
 	echo "**** install buster packages ****" && \
@@ -15,6 +15,7 @@ RUN \
 		apt-get install -y --allow-remove-essential \
 			aria2 \
 			bash \
+   			build-essential \
 			curl \
 			python3 \
 			python3-pip \
