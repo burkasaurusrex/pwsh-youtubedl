@@ -15,19 +15,19 @@ RUN \
    			build-essential \
 			curl \
 			ffmpeg \
-   			mediainfo \	
+   			mediainfo \
       			python3 \
 			python3-pip \
 			python3-setuptools \
 			sqlite3 \
 			tzdata \
 			unzip \
-			webp \ 
+			webp \
 			zip && \
 	echo "**** pip check ****" && \
 		pip3 --version && \
 	echo "**** ffmpeg check ****" && \
-		ffmpeg -version && \			
+		ffmpeg -version && \
 	echo "**** download mkvtoolnix key and install ****" && \
 		cd /usr/share/keyrings && \
 		curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
@@ -37,7 +37,7 @@ RUN \
 		apt-get update && \
 		apt-get install -y mkvtoolnix && \
 	echo "**** mkvtoolnix check ****" && \
-		mkvmerge --version && \		
+		mkvmerge --version && \
 		mkvinfo --version && \
 		mkvextract --version && \
 		mkvpropedit --version && \
