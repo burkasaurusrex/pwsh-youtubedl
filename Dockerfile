@@ -1,5 +1,4 @@
-FROM mcr.microsoft.com/powershell:debian-bullseye-slim
-# FROM mcr.microsoft.com/powershell:preview-debian-bullseye-slim
+FROM mcr.microsoft.com/powershell:debian-bookworm
 VOLUME /root/.local/share/powershell/Modules
 COPY . /
 RUN \
@@ -7,8 +6,6 @@ RUN \
 		echo 'APT::Default-Release "stable";' >| /etc/apt/apt.conf && \
 		echo 'APT::Install-Recommends "0";' >> /etc/apt/apt.conf && \
 		echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
-		echo 'deb http://deb.debian.org/debian stable main' >| /etc/apt/sources.list && \
-		echo 'deb http://deb.debian.org/debian testing main' >> /etc/apt/sources.list && \
 		apt-get update && \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
@@ -17,7 +14,9 @@ RUN \
 			bash \
    			build-essential \
 			curl \
-			python3 \
+			ffmpeg \
+   			mediainfo \	
+      			python3 \
 			python3-pip \
 			python3-setuptools \
 			sqlite3 \
@@ -27,23 +26,8 @@ RUN \
 			zip && \
 	echo "**** pip check ****" && \
 		pip3 --version && \
-	echo "**** install testing packages ****" && \
-		apt-get -t testing install -y --allow-remove-essential \
-			ffmpeg \
-			mediainfo && \	
 	echo "**** ffmpeg check ****" && \
 		ffmpeg -version && \			
-	echo "**** set up msft package signing key and install dotnet ****" && \
-	 	cd /tmp && \
-		curl -O https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb && \
-		cd / && \
-		dpkg -i /tmp/packages-microsoft-prod.deb && \
-		apt-get update && \
-		apt-get install -y apt-transport-https && \
-		apt-get update && \
-		apt-get install -y dotnet-runtime-6.0 && \
-	echo "**** dotnet check ****" && \
-		dotnet --info && \
 	echo "**** download mkvtoolnix key and install ****" && \
 		cd /usr/share/keyrings && \
 		curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
