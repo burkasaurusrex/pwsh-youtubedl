@@ -35,7 +35,7 @@ RUN \
 		echo 'deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bookworm main' >> /etc/apt/sources.list && \
 		echo 'deb-src [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bookworm main' >> /etc/apt/sources.list && \
 		apt-get update && \
-		apt-get install -y mkvtoolnix && \
+		apt-get install -y --allow-remove-essential mkvtoolnix && \
 	echo "**** mkvtoolnix check ****" && \
 		mkvmerge --version && \
 		mkvinfo --version && \
