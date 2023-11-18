@@ -3,8 +3,7 @@ VOLUME /root/.local/share/powershell/Modules
 COPY . /
 RUN \
 	echo "**** set up apt ****" && \
-		echo 'APT::Default-Release "stable";' >| /etc/apt/apt.conf && \
-		echo 'APT::Install-Recommends "0";' >> /etc/apt/apt.conf && \
+		echo 'APT::Install-Recommends "0";' >| /etc/apt/apt.conf && \
 		echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
 		apt-get update && \
 	echo "**** install buster packages ****" && \
