@@ -31,8 +31,8 @@ RUN \
 		cd /usr/share/keyrings && \
 		curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
 		cd / && \
-		echo 'deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bullseye main' >> /etc/apt/sources.list && \
-		echo 'deb-src [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bullseye main' >> /etc/apt/sources.list && \
+		echo 'deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bookworm main' >> /etc/apt/sources.list && \
+		echo 'deb-src [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bookworm main' >> /etc/apt/sources.list && \
 		apt-get update && \
 		apt-get install -y mkvtoolnix && \
 	echo "**** mkvtoolnix check ****" && \
