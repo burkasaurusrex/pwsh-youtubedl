@@ -37,10 +37,10 @@ RUN \
 		apt-get update && \
 		apt-get install -y --allow-remove-essential mkvtoolnix && \
 	echo "**** mkvtoolnix check ****" && \
-		mkvmerge --version && \
-		mkvinfo --version && \
-		mkvextract --version && \
-		mkvpropedit --version && \
+		# mkvmerge --version && \
+		# mkvinfo --version && \
+		# mkvextract --version && \
+		# mkvpropedit --version && \
 	echo "**** install python packages ****" && \
 		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
 	echo "**** basic youtube-dl check ****" && \
