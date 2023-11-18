@@ -9,6 +9,7 @@ RUN \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
+  			apt-transport-https \
 			aria2 \
 			bash \
    			build-essential \
