@@ -1,4 +1,4 @@
 streamlink==6.3.1
 youtube-dl==2021.12.17
 youtube-dlc==2020.11.11.post3
-yt-dlp==2023.11.16
+yt-dlp==2023.12.30
