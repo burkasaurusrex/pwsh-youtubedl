@@ -85,7 +85,7 @@ RUN \
 	 	cd /tmp && \
 		git clone https://github.com/gpac/gpac.git && \
 		cd gpac && \
-		./configure --disable-x11 && \
+		./configure --disable-x11 --use-ffmpeg=system && \
 		make -j$(nproc) && \
 		make install && \
 	echo "**** basic gpac test ****" && \
