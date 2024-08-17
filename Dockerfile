@@ -38,7 +38,6 @@ RUN \
 			unzip \
 			webp \
    			yasm \
-			zlib1g \
    			zlib1g-dev \
 			zip && \
 	echo "**** pip check ****" && \
@@ -66,7 +65,7 @@ RUN \
 	 	cd /tmp && \
 		git clone https://github.com/gpac/gpac.git && \
 		cd gpac && \
-		./configure && \
+		./configure --disable-x11 && \
 		make -j$(nproc) && \
 		make install && \
 	echo "**** basic gpac test ****" && \
