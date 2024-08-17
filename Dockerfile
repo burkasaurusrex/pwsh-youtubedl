@@ -54,6 +54,7 @@ RUN \
 			python3-setuptools \
 			sqlite3 \
    			tesseract-ocr \
+      			tesseract-ocr-dev \
 			tzdata \
 			unzip \
 			webp \
