@@ -27,7 +27,6 @@ RUN \
     			libasound2-dev \
     			libavcodec-dev \
        			libavformat-dev \
-	  		libav-tools \
 	  		libavutil-dev \
      			libcaca-dev \
       			libclang-dev \
