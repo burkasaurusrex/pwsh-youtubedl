@@ -31,7 +31,7 @@ RUN \
      			libcaca-dev \
       			libclang-dev \
 	 		libcurl4-openssl-dev \
-      			libcurl4-gnutls-dev \
+      			# libcurl4-gnutls-dev \
 	 		libfaad-dev \
 	 		libfreetype6-dev \
 	 		libjpeg62-turbo-dev \
