@@ -38,6 +38,7 @@ RUN \
 			unzip \
 			webp \
    			yasm \
+			zlib \
 			zip && \
 	echo "**** pip check ****" && \
 		pip3 --version && \
