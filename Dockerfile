@@ -9,20 +9,35 @@ RUN \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
+  			autoconf \
   			apt-transport-https \
 			aria2 \
 			bash \
    			build-essential \
+      			clang \
+      			cmake \
 			curl \
 			ffmpeg \
+   			g++ \
+   			gcc \
+      			git \
+      			libclang-dev \
+      			libcurl4-gnutls-dev \
+   			libglew-dev \
+      			libglfw3-dev \
+	 		libleptonica-dev \
+	 		libtesseract-dev \
    			mediainfo \
+      			pkg-config \
       			python3 \
 			python3-pip \
 			python3-setuptools \
 			sqlite3 \
+   			tesseract-ocr \
 			tzdata \
 			unzip \
 			webp \
+   			yasm \
 			zip && \
 	echo "**** pip check ****" && \
 		pip3 --version && \
@@ -45,6 +60,26 @@ RUN \
 		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
 	echo "**** basic youtube-dl check ****" && \
 		youtube-dl --version && \
+	echo "**** build gpac ****" && \
+	 	cd /tmp && \
+		git clone https://github.com/gpac/gpac.git && \
+		cd gpac && \
+		./configure && \
+		make -j$(nproc) && \
+		make install && \
+	echo "**** basic gpac test ****" && \
+		MP4Box -version && \
+		gpac -version && \
+  	echo "**** build ccextractor ****" && \
+		cd /tmp && \
+		git clone https://github.com/CCExtractor/ccextractor.git && \
+		cd ccextractor/linux && \
+		./autogen.sh && \
+		./configure --without-rust && \
+		make -j$(nproc) && \
+  		make install && \
+  	echo "**** basic ccextractor test ****" && \
+		ccextractor --version && \
 	echo "**** cleanup ****" && \
 		apt-get autoremove -y --allow-remove-essential && \
 		apt-get clean && \
