@@ -10,6 +10,7 @@ RUN \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
   			autoconf \
+     			automake \
   			apt-transport-https \
 			aria2 \
 			bash \
@@ -69,7 +70,7 @@ RUN \
 		make -j$(nproc) && \
 		make install && \
 	echo "**** basic gpac test ****" && \
-		MP4Box -h && \
+		MP4Box -version && \
 		gpac -h && \
   	echo "**** build ccextractor ****" && \
 		cd /tmp && \
