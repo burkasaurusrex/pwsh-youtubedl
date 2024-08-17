@@ -18,16 +18,36 @@ RUN \
       			clang \
       			cmake \
 			curl \
+   			dvb-apps \
 			ffmpeg \
    			g++ \
    			gcc \
       			git \
+	 		liba52-0.7.4-dev \
+    			libasound2-dev \
+    			libavcodec-dev \
+       			libavformat-dev \
+	  		libav-tools \
+	  		libavutil-dev \
+     			libcaca-dev \
       			libclang-dev \
+	 		libcurl4-openssl-dev \
       			libcurl4-gnutls-dev \
-   			libglew-dev \
-      			libglfw3-dev \
+	 		libfaad-dev \
+	 		libfreetype6-dev \
+	 		libjpeg62-turbo-dev \
 	 		libleptonica-dev \
+    			libmad0-dev \
+       			libnghttp2-dev \
+       			libogg-dev \
+	  		libopenjp2-7-dev \
+    			libpng-dev \
+       			libssl-dev \
+       			libswscale-dev \
 	 		libtesseract-dev \
+    			libtheora-dev \
+    			libvorbis-dev \
+       			libxvidcore-dev \
    			mediainfo \
       			pkg-config \
       			python3 \
@@ -40,7 +60,7 @@ RUN \
 			webp \
    			yasm \
    			zlib1g-dev \
-			zip && \
+			zip && \  
 	echo "**** pip check ****" && \
 		pip3 --version && \
 	echo "**** ffmpeg check ****" && \
@@ -77,12 +97,24 @@ RUN \
 		git clone https://github.com/CCExtractor/ccextractor.git && \
 		cd ccextractor/linux && \
 		./autogen.sh && \
-		./configure --without-rust && \
+		./configure --enable-hardsubx --enable-ocr --enable-ffmpeg --without-rust && \
 		make -j$(nproc) && \
   		make install && \
   	echo "**** basic ccextractor test ****" && \
 		ccextractor --version && \
 	echo "**** cleanup ****" && \
+		apt-get remove -y --allow-remove-essential \
+  			autoconf \
+     			automake \  	
+   			build-essential \
+      			clang \
+      			cmake \	
+			g++ \
+   			gcc \
+      			git \
+			pkg-config \
+   			python3-setuptools \
+			yasm && \ 
 		apt-get autoremove -y --allow-remove-essential && \
 		apt-get clean && \
 		rm -rf \
