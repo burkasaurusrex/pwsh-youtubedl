@@ -69,8 +69,8 @@ RUN \
 		make -j$(nproc) && \
 		make install && \
 	echo "**** basic gpac test ****" && \
-		MP4Box -version && \
-		gpac -version && \
+		MP4Box -h && \
+		gpac -h && \
   	echo "**** build ccextractor ****" && \
 		cd /tmp && \
 		git clone https://github.com/CCExtractor/ccextractor.git && \
