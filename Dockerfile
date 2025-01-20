@@ -93,13 +93,13 @@ RUN \
 		MP4Box -version && \
 		gpac -h && \
   	echo "**** build ccextractor ****" && \
-		cd /tmp && \
-		git clone https://github.com/CCExtractor/ccextractor.git && \
-		cd ccextractor/linux && \
-		./autogen.sh && \
-		./configure --enable-hardsubx --enable-ocr --enable-ffmpeg --without-rust && \
-		make -j$(nproc) && \
-  		make install && \
+		# cd /tmp && \
+		# git clone https://github.com/CCExtractor/ccextractor.git && \
+		# cd ccextractor/linux && \
+		# ./autogen.sh && \
+		# ./configure --enable-hardsubx --enable-ocr --enable-ffmpeg --without-rust && \
+		# make -j$(nproc) && \
+  		# make install && \
   	echo "**** basic ccextractor test ****" && \
 		ccextractor --version && \
 	echo "**** cleanup ****" && \
