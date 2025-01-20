@@ -9,57 +9,57 @@ RUN \
 	echo "**** install buster packages ****" && \
 		apt-get upgrade -y --allow-remove-essential && \
 		apt-get install -y --allow-remove-essential \
-  			autoconf \
-     			automake \
+  			# autoconf \
+     			# automake \
   			apt-transport-https \
 			aria2 \
 			bash \
    			build-essential \
-      			clang \
-      			cmake \
+      			# clang \
+      			# cmake \
 			curl \
-   			dvb-apps \
+   			# dvb-apps \
 			ffmpeg \
-   			g++ \
-   			gcc \
-      			git \
-	 		liba52-0.7.4-dev \
-    			libasound2-dev \
-    			libavcodec-dev \
-       			libavformat-dev \
-	  		libavutil-dev \
-     			libcaca-dev \
-      			libclang-dev \
-	 		libcurl4-openssl-dev \
+   			# g++ \
+   			# gcc \
+      			# git \
+	 		# liba52-0.7.4-dev \
+    			# libasound2-dev \
+    			# libavcodec-dev \
+       			# libavformat-dev \
+	  		# libavutil-dev \
+     			# libcaca-dev \
+      			# libclang-dev \
+	 		# libcurl4-openssl-dev \
       			# libcurl4-gnutls-dev \
-	 		libfaad-dev \
-	 		libfreetype6-dev \
-	 		libjpeg62-turbo-dev \
-	 		libleptonica-dev \
-    			libmad0-dev \
-       			libnghttp2-dev \
-       			libogg-dev \
-	  		libopenjp2-7-dev \
-    			libpng-dev \
-       			libssl-dev \
-       			libswscale-dev \
-	 		libtesseract-dev \
-    			libtheora-dev \
-    			libvorbis-dev \
-       			libxvidcore-dev \
+	 		# libfaad-dev \
+	 		# libfreetype6-dev \
+	 		# libjpeg62-turbo-dev \
+	 		# libleptonica-dev \
+    			# libmad0-dev \
+       			# libnghttp2-dev \
+       			# libogg-dev \
+	  		# libopenjp2-7-dev \
+    			# libpng-dev \
+       			# libssl-dev \
+       			# libswscale-dev \
+	 		# libtesseract-dev \
+    			# libtheora-dev \
+    			# libvorbis-dev \
+       			# libxvidcore-dev \
    			mediainfo \
-      			pkg-config \
+      			# pkg-config \
       			python3 \
 			python3-pip \
 			python3-setuptools \
 			sqlite3 \
-   			tesseract-ocr \
-      			tesseract-ocr-dev \
+   			# tesseract-ocr \
+      			# tesseract-ocr-dev \
 			tzdata \
 			unzip \
 			webp \
-   			yasm \
-   			zlib1g-dev \
+   			# yasm \
+   			# zlib1g-dev \
 			zip && \  
 	echo "**** pip check ****" && \
 		pip3 --version && \
@@ -83,15 +83,15 @@ RUN \
 	echo "**** basic youtube-dl check ****" && \
 		youtube-dl --version && \
 	echo "**** build gpac ****" && \
-	 	cd /tmp && \
-		git clone https://github.com/gpac/gpac.git && \
-		cd gpac && \
-		./configure --disable-x11 --use-ffmpeg=system && \
-		make -j$(nproc) && \
-		make install && \
+	 	# cd /tmp && \
+		# git clone https://github.com/gpac/gpac.git && \
+		# cd gpac && \
+		# ./configure --disable-x11 --use-ffmpeg=system && \
+		# make -j$(nproc) && \
+		# make install && \
 	echo "**** basic gpac test ****" && \
-		MP4Box -version && \
-		gpac -h && \
+		# MP4Box -version && \
+		# gpac -h && \
   	echo "**** build ccextractor ****" && \
 		# cd /tmp && \
 		# git clone https://github.com/CCExtractor/ccextractor.git && \
@@ -101,7 +101,7 @@ RUN \
 		# make -j$(nproc) && \
   		# make install && \
   	echo "**** basic ccextractor test ****" && \
-		ccextractor --version && \
+		# ccextractor --version && \
 	echo "**** cleanup ****" && \
 		apt-get remove -y --allow-remove-essential \
   			autoconf \
