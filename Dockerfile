@@ -47,6 +47,10 @@ RUN \
     			# libtheora-dev \
     			# libvorbis-dev \
        			# libxvidcore-dev \
+		    	intel-media-va-driver-non-free \
+    			libva2 \
+    			libva-drm2 \
+    			vainfo \
    			mediainfo \
       			# pkg-config \
       			python3 \
