@@ -56,7 +56,7 @@ RUN \
 		    	intel-media-va-driver \
     			libva2 \
     			libva-drm2 \
-    			vainfo \
+    			# vainfo \
    			mediainfo \
       			# pkg-config \
       			python3 \
@@ -82,6 +82,7 @@ RUN \
 		echo "DEB URL: $DEB_URL" && \
 		curl -L -o /tmp/${REPO_NAME}.deb "$DEB_URL" && \
 		apt-get install -y /tmp/${REPO_NAME}.deb && \
+  		ENV PATH="/usr/lib/jellyfin-ffmpeg:$PATH"
 		rm -f /tmp/${REPO_NAME}.deb && \
   	echo "**** ffmpeg check ****" && \
 		ffmpeg -version && \
