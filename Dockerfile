@@ -5,6 +5,8 @@ COPY . /
 ENV REPO_OWNER=jellyfin
 ENV REPO_NAME=jellyfin-ffmpeg
 ENV TARGET_ARCH=bookworm_amd64
+# Include jellyfin-ffmpeg in PATH
+ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 
 RUN \
 	set -eux && \
@@ -82,7 +84,6 @@ RUN \
 		echo "DEB URL: $DEB_URL" && \
 		curl -L -o /tmp/${REPO_NAME}.deb "$DEB_URL" && \
 		apt-get install -y /tmp/${REPO_NAME}.deb && \
-  		ENV PATH="/usr/lib/jellyfin-ffmpeg:$PATH" && \
 		rm -f /tmp/${REPO_NAME}.deb && \
   	echo "**** ffmpeg check ****" && \
 		ffmpeg -version && \
