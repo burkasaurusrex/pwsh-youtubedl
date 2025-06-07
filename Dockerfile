@@ -76,7 +76,7 @@ RUN \
 	echo "**** install jellyfin-ffmpeg ****" && \	
 		DEB_URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
 		| grep 'browser_download_url' \
-		| grep '${TARGET_ARCH}\.deb' \
+		| grep "${TARGET_ARCH}\.deb" \
 		| head -n 1 \
 		| sed -E 's/.*"([^"]+)".*/\1/') && \
 		echo "DEB URL: $DEB_URL" && \
