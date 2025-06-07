@@ -1,7 +1,13 @@
 FROM mcr.microsoft.com/powershell:debian-bookworm
 VOLUME /root/.local/share/powershell/Modules
 COPY . /
+# Set project variables
+ENV REPO_OWNER=jellyfin
+ENV REPO_NAME=jellyfin-ffmpeg
+ENV TARGET_ARCH=bookworm_amd64
+
 RUN \
+	set -eux && \
 	echo "**** set up apt ****" && \
 		echo 'APT::Install-Recommends "0";' >| /etc/apt/apt.conf && \
 		echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
@@ -19,7 +25,7 @@ RUN \
       			# cmake \
 			curl \
    			# dvb-apps \
-			ffmpeg \
+			# ffmpeg \
    			# g++ \
    			# gcc \
       			# git \
@@ -67,7 +73,17 @@ RUN \
 			zip && \  
 	echo "**** pip check ****" && \
 		pip3 --version && \
-	echo "**** ffmpeg check ****" && \
+	echo "**** install jellyfin-ffmpeg ****" && \	
+		DEB_URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+		| grep 'browser_download_url' \
+		| grep '${TARGET_ARCH}\.deb' \
+		| head -n 1 \
+		| sed -E 's/.*"([^"]+)".*/\1/') && \
+		echo "DEB URL: $DEB_URL" && \
+		curl -L -o /tmp/${REPO_NAME}.deb "$DEB_URL" && \
+		apt-get install -y /tmp/${REPO_NAME}.deb && \
+		rm -f /tmp/${REPO_NAME}.deb && \
+  	echo "**** ffmpeg check ****" && \
 		ffmpeg -version && \
 	echo "**** download mkvtoolnix key and install ****" && \
 		cd /usr/share/keyrings && \
