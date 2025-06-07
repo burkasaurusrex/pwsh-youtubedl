@@ -47,7 +47,7 @@ RUN \
     			# libtheora-dev \
     			# libvorbis-dev \
        			# libxvidcore-dev \
-		    	intel-media-va-driver-non-free \
+		    	intel-media-va-driver \
     			libva2 \
     			libva-drm2 \
     			vainfo \
