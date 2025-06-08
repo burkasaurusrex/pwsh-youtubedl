@@ -7,6 +7,7 @@ ARG TARGET_ARCH=${DEBIAN_VERSION}_amd64
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
 VOLUME /root/.local/share/powershell/Modules
+ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 
 # Copy project files early to make requirements.txt available in all stages
 COPY . /
@@ -68,6 +69,7 @@ RUN set -eux && \
         libfreetype6-dev \
 	libfontconfig1-dev && \
     cd /tmp && \
+    rm -rf gpac && \
     git clone https://github.com/gpac/gpac.git && \
     cd gpac && \
     mkdir build && cd build && \
@@ -128,6 +130,7 @@ RUN set -eux && \
         libtesseract-dev \
         libleptonica-dev && \
     cd /tmp && \
+    rm -rf ccextractor && \    
     git clone https://github.com/CCExtractor/ccextractor.git && \
     cd ccextractor/linux && \
     ./autogen.sh && \
