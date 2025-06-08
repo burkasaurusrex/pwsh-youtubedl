@@ -3,6 +3,8 @@ ARG DEBIAN_VERSION=bookworm
 ARG REPO_OWNER=jellyfin
 ARG REPO_NAME=jellyfin-ffmpeg
 ARG TARGET_ARCH=${DEBIAN_VERSION}_amd64
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
@@ -154,6 +156,7 @@ ARG DEBIAN_VERSION
 ARG REPO_OWNER
 ARG REPO_NAME
 ARG TARGET_ARCH
+ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 
 # Explicitly copy requirements.txt for clarity
 COPY requirements.txt /requirements.txt
@@ -191,9 +194,6 @@ COPY --from=builder-gpac /usr/local /usr/local
 COPY --from=builder-ccextractor /usr/local /usr/local
 
 # Fix references
-ENV LANG=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
-ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg/lib:/usr/local/lib:$LD_LIBRARY_PATH
 RUN set -eux && \
     echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
@@ -202,7 +202,7 @@ RUN set -eux && \
     MP4Box -version && \
     ccextractor --version
 
-# Final validation and Python package install
+# Install python requirements
 RUN set -eux && \
     pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
     streamlink --version && \
