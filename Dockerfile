@@ -102,13 +102,14 @@ RUN set -eux && \
         --enable-freetype \
         --enable-ttf \
         --enable-fontconfig \
-        --enable-gpacparser && \
+        --enable-gpacparser \
+	--enable-dev && \
     make -j$(nproc) && \
     make install && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build CCExtractor ----
-FROM base AS builder-ccextractor
+FROM builder-gpac AS builder-ccextractor
 
 RUN set -eux && \
     apt-get update && \
