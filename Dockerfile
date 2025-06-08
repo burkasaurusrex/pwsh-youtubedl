@@ -109,27 +109,30 @@ RUN set -eux && \
     apt-get update && \
     apt-get install -y --allow-remove-essential \
         git \
-	cmake \
- 	build-essential \
-  	pkg-config \
+        autoconf \
+        automake \
+        libtool \
+        build-essential \
+        pkg-config \
         libssl-dev \
-	libcurl4-openssl-dev \
+        libcurl4-openssl-dev \
         libfreetype6-dev \
-	libfontconfig1-dev \
+        libfontconfig1-dev \
         libpng-dev \
-	zlib1g-dev \
+        zlib1g-dev \
         libtesseract-dev \
-	libleptonica-dev && \
+        libleptonica-dev && \
     cd /tmp && \
     git clone https://github.com/CCExtractor/ccextractor.git && \
-    cd ccextractor && \
-    mkdir build && cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_GUI=OFF \
-        -DENABLE_OCR=ON \
-        -DENABLE_HD_H264=ON \
-        -DENABLE_LIBCURL=ON && \
-    make -j$(nproc) && make install && \
+    cd ccextractor/linux && \
+    ./autogen.sh && \
+    ./configure \
+        --enable-hardsubx \
+        --enable-ocr \
+        --enable-ffmpeg \
+        --without-rust && \
+    make -j$(nproc) && \
+    make install && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Final Image ----
