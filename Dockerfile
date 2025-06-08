@@ -63,14 +63,6 @@ RUN set -eux && \
     ldconfig && \
     # Test Jellyfin-ffmpeg binaries immediately
     ffmpeg -version && \
-    pkg-config --cflags libavcodec && \
-    pkg-config --cflags libavformat && \
-    pkg-config --cflags libavutil && \
-    pkg-config --cflags libswscale && \
-    pkg-config --libs libavcodec && \
-    pkg-config --libs libavformat && \
-    pkg-config --libs libavutil && \
-    pkg-config --libs libswscale && \
     # Install mkvtoolnix
     cd /usr/share/keyrings && \
     curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
@@ -119,7 +111,8 @@ RUN set -eux && \
     cd gpac && \
     ./configure \
         --disable-x11 \
-        --use-ffmpeg=system \
+        --use-ffmpeg="/usr/lib/jellyfin-ffmpeg" \
+        --extra-ff-ldflags="-L/usr/lib/jellyfin-ffmpeg -Wl,-rpath,/usr/lib/jellyfin-ffmpeg" \
         --disable-gl \
         --disable-sdl \
         --disable-xvideo \
