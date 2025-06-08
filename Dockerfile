@@ -1,146 +1,175 @@
-FROM mcr.microsoft.com/powershell:debian-bookworm
-VOLUME /root/.local/share/powershell/Modules
-COPY . /
-# Set project variables
+# ---- Variables ----
+ENV DEBIAN_VERSION=bookworm
 ENV REPO_OWNER=jellyfin
 ENV REPO_NAME=jellyfin-ffmpeg
-ENV TARGET_ARCH=bookworm_amd64
+ENV TARGET_ARCH=${DEBIAN_VERSION}_amd64
+
+# ---- Base Image ----
+FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
+VOLUME /root/.local/share/powershell/Modules
+
+# Copy project files early to make requirements.txt available in all stages
+COPY . /
+
 # Include jellyfin-ffmpeg in PATH
 ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 
-RUN \
-	set -eux && \
-	echo "**** set up apt ****" && \
-		echo 'APT::Install-Recommends "0";' >| /etc/apt/apt.conf && \
-		echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
-		apt-get update && \
-	echo "**** install buster packages ****" && \
-		apt-get upgrade -y --allow-remove-essential && \
-		apt-get install -y --allow-remove-essential \
-  			# autoconf \
-     			# automake \
-  			apt-transport-https \
-			aria2 \
-			bash \
-   			build-essential \
-      			# clang \
-      			# cmake \
-			curl \
-   			# dvb-apps \
-			# ffmpeg \
-   			# g++ \
-   			# gcc \
-      			# git \
-	 		# liba52-0.7.4-dev \
-    			# libasound2-dev \
-    			# libavcodec-dev \
-       			# libavformat-dev \
-	  		# libavutil-dev \
-     			# libcaca-dev \
-      			# libclang-dev \
-	 		# libcurl4-openssl-dev \
-      			# libcurl4-gnutls-dev \
-	 		# libfaad-dev \
-	 		# libfreetype6-dev \
-	 		# libjpeg62-turbo-dev \
-	 		# libleptonica-dev \
-    			# libmad0-dev \
-       			# libnghttp2-dev \
-       			# libogg-dev \
-	  		# libopenjp2-7-dev \
-    			# libpng-dev \
-       			# libssl-dev \
-       			# libswscale-dev \
-	 		# libtesseract-dev \
-    			# libtheora-dev \
-    			# libvorbis-dev \
-       			# libxvidcore-dev \
-		    	intel-media-va-driver \
-    			libva2 \
-    			libva-drm2 \
-    			# vainfo \
-   			mediainfo \
-      			# pkg-config \
-      			python3 \
-			python3-pip \
-			python3-setuptools \
-			sqlite3 \
-   			# tesseract-ocr \
-      			# tesseract-ocr-dev \
-			tzdata \
-			unzip \
-			webp \
-   			# yasm \
-   			# zlib1g-dev \
-			zip && \  
-	echo "**** pip check ****" && \
-		pip3 --version && \
-	echo "**** install jellyfin-ffmpeg ****" && \	
-		DEB_URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-		| grep 'browser_download_url' \
-		| grep "${TARGET_ARCH}\.deb" \
-		| head -n 1 \
-		| sed -E 's/.*"([^"]+)".*/\1/') && \
-		echo "DEB URL: $DEB_URL" && \
-		curl -L -o /tmp/${REPO_NAME}.deb "$DEB_URL" && \
-		apt-get install -y /tmp/${REPO_NAME}.deb && \
-		rm -f /tmp/${REPO_NAME}.deb && \
-  	echo "**** ffmpeg check ****" && \
-		ffmpeg -version && \
-	echo "**** download mkvtoolnix key and install ****" && \
-		cd /usr/share/keyrings && \
-		curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
-		cd / && \
-		echo 'deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bookworm main' >> /etc/apt/sources.list && \
-		echo 'deb-src [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ bookworm main' >> /etc/apt/sources.list && \
-		apt-get update && \
-		apt-get install -y --allow-remove-essential mkvtoolnix && \
-	echo "**** mkvtoolnix check ****" && \
-		# mkvmerge --version && \
-		# mkvinfo --version && \
-		# mkvextract --version && \
-		# mkvpropedit --version && \
-	echo "**** install python packages ****" && \
-		pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
-	echo "**** basic youtube-dl check ****" && \
-		youtube-dl --version && \
-	echo "**** build gpac ****" && \
-	 	# cd /tmp && \
-		# git clone https://github.com/gpac/gpac.git && \
-		# cd gpac && \
-		# ./configure --disable-x11 --use-ffmpeg=system && \
-		# make -j$(nproc) && \
-		# make install && \
-	echo "**** basic gpac test ****" && \
-		# MP4Box -version && \
-		# gpac -h && \
-  	echo "**** build ccextractor ****" && \
-		# cd /tmp && \
-		# git clone https://github.com/CCExtractor/ccextractor.git && \
-		# cd ccextractor/linux && \
-		# ./autogen.sh && \
-		# ./configure --enable-hardsubx --enable-ocr --enable-ffmpeg --without-rust && \
-		# make -j$(nproc) && \
-  		# make install && \
-  	echo "**** basic ccextractor test ****" && \
-		# ccextractor --version && \
-	echo "**** cleanup ****" && \
-		apt-get remove -y --allow-remove-essential \
-  			autoconf \
-     			automake \  	
-   			build-essential \
-      			clang \
-      			cmake \	
-			g++ \
-   			gcc \
-      			git \
-			pkg-config \
-   			python3-setuptools \
-			yasm && \ 
-		apt-get autoremove -y --allow-remove-essential && \
-		apt-get clean && \
-		rm -rf \
-			/tmp/* \
-			/var/tmp/* \
-			/var/lib/apt/lists/*
+# Base runtime packages (headless)
+RUN set -eux && \
+    echo 'APT::Install-Recommends "0";' >| /etc/apt/apt.conf && \
+    echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
+    apt-get update && \
+    apt-get upgrade -y --allow-remove-essential && \
+    apt-get install -y --allow-remove-essential \
+        apt-transport-https \
+        aria2 \
+        bash \
+        curl \
+        intel-media-va-driver \
+        libva2 \
+        libva-drm2 \
+        mediainfo \
+        python3 \
+        python3-pip \
+        python3-setuptools \
+        sqlite3 \
+        tzdata \
+        unzip \
+        webp \
+        zip \
+        # Known fonts for subtitle and emoji support
+        fonts-liberation \
+        fonts-dejavu-core \
+        fonts-noto-core \
+        fonts-noto-color-emoji && \
+    rm -rf /var/lib/apt/lists/*
+
+# ---- Build GPAC ----
+FROM base AS builder-gpac
+
+RUN set -eux && \
+    apt-get update && \
+    apt-get install -y --allow-remove-essential \
+        git \
+	cmake \
+ 	build-essential \
+  	pkg-config \
+        libavcodec-dev \
+	libavformat-dev \
+ 	libavutil-dev \
+  	libswscale-dev \
+   	libavresample-dev \
+        libssl-dev \
+	libpng-dev \
+ 	libjpeg-dev \
+  	zlib1g-dev \
+   	libtiff-dev \
+    	libcurl4-openssl-dev \
+        libfreetype6-dev \
+	libfontconfig1-dev && \
+    cd /tmp && \
+    git clone https://github.com/gpac/gpac.git && \
+    cd gpac && \
+    mkdir build && cd build && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release \
+        -DENABLE_X11=OFF \
+        -DENABLE_GL=OFF \
+        -DENABLE_SDL=OFF \
+        -DENABLE_XVIDEO=OFF \
+        -DENABLE_OPENGL_ES=OFF \
+        -DENABLE_VULKAN=OFF \
+        -DENABLE_OPENJPEG=OFF \
+        -DENABLE_XVID=OFF \
+        -DENABLE_PLAYER=OFF \
+        -DENABLE_SPIDERMONKEY=OFF \
+        -DENABLE_JS=OFF \
+        -DENABLE_LUA=OFF \
+        -DENABLE_XSLT=OFF \
+        -DENABLE_ALSA=OFF \
+        -DENABLE_PULSE=OFF \
+        -DENABLE_OSS_AUDIO=OFF \
+        -DENABLE_DIRECTSOUND=OFF \
+        -DENABLE_COREAUDIO=OFF \
+        -DENABLE_FFMPEG=ON \
+        -DENABLE_ZLIB=ON \
+        -DENABLE_PNG=ON \
+        -DENABLE_JPEG=ON \
+        -DENABLE_TIFF=ON \
+        -DENABLE_FREETYPE=ON \
+        -DENABLE_TTF=ON \
+        -DENABLE_FONTCONFIG=ON \
+        -DENABLE_GPACPARSER=ON && \
+    make -j$(nproc) && make install && \
+    rm -rf /tmp/* /var/lib/apt/lists/*
+
+# ---- Build CCExtractor ----
+FROM base AS builder-ccextractor
+
+RUN set -eux && \
+    apt-get update && \
+    apt-get install -y --allow-remove-essential \
+        git \
+	cmake \
+ 	build-essential \
+  	pkg-config \
+        libssl-dev \
+	libcurl4-openssl-dev \
+        libfreetype6-dev \
+	libfontconfig1-dev \
+        libpng-dev \
+	zlib1g-dev \
+        libtesseract-dev \
+	libleptonica-dev && \
+    cd /tmp && \
+    git clone https://github.com/CCExtractor/ccextractor.git && \
+    cd ccextractor && \
+    mkdir build && cd build && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_GUI=OFF \
+        -DENABLE_OCR=ON \
+        -DENABLE_HD_H264=ON \
+        -DENABLE_LIBCURL=ON && \
+    make -j$(nproc) && make install && \
+    rm -rf /tmp/* /var/lib/apt/lists/*
+
+# ---- Final Image ----
+FROM base AS final
+
+# Explicitly copy requirements.txt for clarity
+COPY requirements.txt /requirements.txt
+
+RUN set -eux && \
+    # Install latest jellyfin-ffmpeg release
+    DEB_URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | grep 'browser_download_url' \
+        | grep "${TARGET_ARCH}\.deb" \
+        | head -n 1 \
+        | sed -E 's/.*"([^"]+)".*/\1/') && \
+    echo "DEB URL: $DEB_URL" && \
+    curl -L -o /tmp/${REPO_NAME}.deb "$DEB_URL" && \
+    apt-get install -y /tmp/${REPO_NAME}.deb && \
+    rm -f /tmp/${REPO_NAME}.deb && \
+    # Test ffmpeg
+    ffmpeg -version && \
+    # Install mkvtoolnix from official repo
+    cd /usr/share/keyrings && \
+    curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
+    cd / && \
+    echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" >> /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends mkvtoolnix && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy GPAC and CCExtractor binaries from build stages
+COPY --from=builder-gpac /usr/local /usr/local
+COPY --from=builder-ccextractor /usr/local /usr/local
+
+# Final validation and Python package install
+RUN set -eux && \
+    MP4Box -version && \
+    ccextractor --version && \
+    pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
+    youtube-dl --version
+
+# Final entrypoint
 ENTRYPOINT ["pwsh", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='Continue';"]
