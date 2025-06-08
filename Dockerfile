@@ -181,6 +181,11 @@ RUN set -eux && \
     echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" >> /etc/apt/sources.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends mkvtoolnix && \
+    # Test mkvtoolnix
+    mkvmerge --version && \
+    mkvinfo --version && \
+    mkvextract --version && \
+    mkvpropedit --version && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy GPAC and CCExtractor binaries from build stages
@@ -189,16 +194,18 @@ COPY --from=builder-ccextractor /usr/local /usr/local
 
 # Fix references
 ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
-ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg:/usr/local/lib:$LD_LIBRARY_PATH
-RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
-    echo "/usr/lib/jellyfin-ffmpeg" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
-    ldconfig
+ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg/lib:/usr/local/lib:$LD_LIBRARY_PATH
+RUN set -eux && \
+    echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
+    echo "/usr/lib/jellyfin-ffmpeg/lib" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
+    ldconfig && \
+    MP4Box -version && \
+    ccextractor --version
 
 # Final validation and Python package install
 RUN set -eux && \
-    MP4Box -version && \
-    ccextractor --version && \
     pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
+    streamlink --version && \
     youtube-dl --version
 
 # Final entrypoint
