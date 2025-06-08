@@ -8,12 +8,6 @@ ARG TARGET_ARCH=${DEBIAN_VERSION}_amd64
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
 VOLUME /root/.local/share/powershell/Modules
 
-# Copy project files early to make requirements.txt available in all stages
-COPY . /
-
-# Include jellyfin-ffmpeg in PATH
-ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
-
 # Base runtime packages (headless)
 RUN set -eux && \
     echo 'APT::Install-Recommends "0";' >| /etc/apt/apt.conf && \
@@ -28,6 +22,7 @@ RUN set -eux && \
         intel-media-va-driver \
         libva2 \
         libva-drm2 \
+	locales \
         mediainfo \
         python3 \
         python3-pip \
@@ -42,6 +37,9 @@ RUN set -eux && \
         fonts-dejavu-core \
         fonts-noto-core \
         fonts-noto-color-emoji && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen && \
+    update-locale LANG=en_US.UTF-8 && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build GPAC ----
@@ -193,6 +191,8 @@ COPY --from=builder-gpac /usr/local /usr/local
 COPY --from=builder-ccextractor /usr/local /usr/local
 
 # Fix references
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg/lib:/usr/local/lib:$LD_LIBRARY_PATH
 RUN set -eux && \
