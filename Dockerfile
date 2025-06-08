@@ -73,7 +73,7 @@ RUN set -eux && \
     cd /tmp && \
     rm -rf gpac && \
     # GPAC_TAG=$(curl -s https://api.github.com/repos/gpac/gpac/releases/latest | grep tag_name | cut -d '"' -f 4) && \
-    GPAC_TAG="2.2.1" && \
+    GPAC_TAG="v2.2.1" && \
     echo "GPAC tag: ${GPAC_TAG}" && \
     git clone --branch ${GPAC_TAG} https://github.com/gpac/gpac.git && \
     cd gpac && \
