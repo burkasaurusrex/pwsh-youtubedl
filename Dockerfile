@@ -3,12 +3,16 @@ ARG DEBIAN_VERSION=bookworm
 ARG REPO_OWNER=jellyfin
 ARG REPO_NAME=jellyfin-ffmpeg
 ARG TARGET_ARCH=${DEBIAN_VERSION}_amd64
-ENV LANG=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
 
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
+
+# ---- Volumes ----
 VOLUME /root/.local/share/powershell/Modules
+
+# ---- Environment Vaiables ----
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 # Base runtime packages (headless)
 RUN set -eux && \
