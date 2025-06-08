@@ -72,7 +72,9 @@ RUN set -eux && \
         libfontconfig1-dev && \
     cd /tmp && \
     rm -rf gpac && \
-    git clone https://github.com/gpac/gpac.git && \
+    GPAC_TAG=$(curl -s https://api.github.com/repos/gpac/gpac/releases/latest | grep tag_name | cut -d '"' -f 4) && \
+    echo "Cloning GPAC tag ${GPAC_TAG}" && \
+    git clone --branch ${GPAC_TAG} https://github.com/gpac/gpac.git && \
     cd gpac && \
     ./configure \
         --disable-x11 \
@@ -103,7 +105,7 @@ RUN set -eux && \
         --enable-ttf \
         --enable-fontconfig \
         --enable-gpacparser \
-	--enable-dev && \
+        --enable-dev && \
     make -j$(nproc) && \
     make install && \
     rm -rf /tmp/* /var/lib/apt/lists/*
