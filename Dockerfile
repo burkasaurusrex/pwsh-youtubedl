@@ -41,7 +41,7 @@ RUN set -eux && \
         fonts-liberation \
         fonts-dejavu-core \
         fonts-noto-core \
-        fonts-noto-color-emoji && \
+        fonts-noto-color-emoji
 
 # ---- Build GPAC ----
 FROM base AS builder-gpac
