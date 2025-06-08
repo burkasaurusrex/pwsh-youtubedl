@@ -4,16 +4,16 @@ ARG DEBIAN_VERSION=bookworm
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
 
-# ---- Volumes ----
-VOLUME /root/.local/share/powershell/Modules
-
 # ---- Environment Variables ----
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV DEBIAN_VERSION=${DEBIAN_VERSION}
 ENV TARGET_ARCH=${DEBIAN_VERSION}_amd64
 ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
-ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg:/usr/local/lib
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/jellyfin-ffmpeg:/usr/local/lib"
+
+# ---- Volumes ----
+VOLUME /root/.local/share/powershell/Modules
 
 # ---- Base runtime packages (headless) ----
 RUN set -eux && \
@@ -68,7 +68,7 @@ RUN set -eux && \
     cd /usr/share/keyrings && \
     curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
     cd / && \
-    echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" >> /etc/apt/sources.list && \
+    echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" > /etc/apt/sources.list.d/mkvtoolnix.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends mkvtoolnix && \
     # Test mkvtoolnix binaries immediately
