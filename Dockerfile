@@ -52,56 +52,59 @@ RUN set -eux && \
     apt-get update && \
     apt-get install -y --allow-remove-essential \
         git \
-	cmake \
- 	build-essential \
-  	pkg-config \
+        autoconf \
+        automake \
+        libtool \
+        build-essential \
+        pkg-config \
         libavcodec-dev \
-	libavformat-dev \
- 	libavutil-dev \
-  	libswscale-dev \
-	libswresample-dev \
+        libavformat-dev \
+        libavutil-dev \
+        libswresample-dev \
+        libswscale-dev \
         libssl-dev \
-	libpng-dev \
- 	libjpeg-dev \
-  	zlib1g-dev \
-   	libtiff-dev \
-    	libcurl4-openssl-dev \
+        libpng-dev \
+        libjpeg-dev \
+        zlib1g-dev \
+        libtiff-dev \
+        libcurl4-openssl-dev \
         libfreetype6-dev \
-	libfontconfig1-dev && \
+        libfontconfig1-dev && \
     cd /tmp && \
     rm -rf gpac && \
     git clone https://github.com/gpac/gpac.git && \
     cd gpac && \
-    mkdir builder-gpac && cd builder-gpac && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release \
-        -DENABLE_X11=OFF \
-        -DENABLE_GL=OFF \
-        -DENABLE_SDL=OFF \
-        -DENABLE_XVIDEO=OFF \
-        -DENABLE_OPENGL_ES=OFF \
-        -DENABLE_VULKAN=OFF \
-        -DENABLE_OPENJPEG=OFF \
-        -DENABLE_XVID=OFF \
-        -DENABLE_PLAYER=OFF \
-        -DENABLE_SPIDERMONKEY=OFF \
-        -DENABLE_JS=OFF \
-        -DENABLE_LUA=OFF \
-        -DENABLE_XSLT=OFF \
-        -DENABLE_ALSA=OFF \
-        -DENABLE_PULSE=OFF \
-        -DENABLE_OSS_AUDIO=OFF \
-        -DENABLE_DIRECTSOUND=OFF \
-        -DENABLE_COREAUDIO=OFF \
-        -DENABLE_FFMPEG=ON \
-        -DENABLE_ZLIB=ON \
-        -DENABLE_PNG=ON \
-        -DENABLE_JPEG=ON \
-        -DENABLE_TIFF=ON \
-        -DENABLE_FREETYPE=ON \
-        -DENABLE_TTF=ON \
-        -DENABLE_FONTCONFIG=ON \
-        -DENABLE_GPACPARSER=ON && \
-    make -j$(nproc) && make install && \
+    ./configure \
+        --disable-x11 \
+        --use-ffmpeg=system \
+        --disable-gl \
+        --disable-sdl \
+        --disable-xvideo \
+        --disable-opengl-es \
+        --disable-vulkan \
+        --disable-openjpeg \
+        --disable-xvid \
+        --disable-player \
+        --disable-spidermonkey \
+        --disable-js \
+        --disable-lua \
+        --disable-xslt \
+        --disable-alsa \
+        --disable-pulse \
+        --disable-oss-audio \
+        --disable-directsound \
+        --disable-coreaudio \
+        --enable-ffmpeg \
+        --enable-zlib \
+        --enable-png \
+        --enable-jpeg \
+        --enable-tiff \
+        --enable-freetype \
+        --enable-ttf \
+        --enable-fontconfig \
+        --enable-gpacparser && \
+    make -j$(nproc) && \
+    make install && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build CCExtractor ----
