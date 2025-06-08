@@ -72,7 +72,7 @@ RUN set -eux && \
     rm -rf gpac && \
     git clone https://github.com/gpac/gpac.git && \
     cd gpac && \
-    mkdir build && cd build && \
+    mkdir builder-gpac && cd builder-gpac && \
     cmake .. -DCMAKE_BUILD_TYPE=Release \
         -DENABLE_X11=OFF \
         -DENABLE_GL=OFF \
