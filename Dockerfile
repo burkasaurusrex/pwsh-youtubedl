@@ -1,8 +1,8 @@
-# ---- Variables ----
-ENV DEBIAN_VERSION=bookworm
-ENV REPO_OWNER=jellyfin
-ENV REPO_NAME=jellyfin-ffmpeg
-ENV TARGET_ARCH=${DEBIAN_VERSION}_amd64
+# ---- Arguments ----
+ARG DEBIAN_VERSION=bookworm
+ARG REPO_OWNER=jellyfin
+ARG REPO_NAME=jellyfin-ffmpeg
+ARG TARGET_ARCH=${DEBIAN_VERSION}_amd64
 
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
