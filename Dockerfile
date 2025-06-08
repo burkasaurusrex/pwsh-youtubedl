@@ -1,6 +1,5 @@
 # ---- Arguments ----
 ARG DEBIAN_VERSION=bookworm
-ARG TARGET_ARCH=${DEBIAN_VERSION}_amd64
 
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
@@ -11,6 +10,7 @@ VOLUME /root/.local/share/powershell/Modules
 # ---- Environment Variables ----
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
+ENV TARGET_ARCH=${DEBIAN_VERSION}_amd64
 ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg:/usr/local/lib
 
