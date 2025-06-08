@@ -116,7 +116,7 @@ RUN set -eux && \
     ./configure \
         --disable-x11 \
         --use-ffmpeg="/usr/lib/jellyfin-ffmpeg" \
-        --extra-ff-ldflags="-L/usr/lib/jellyfin-ffmpeg -Wl,-rpath,/usr/lib/jellyfin-ffmpeg" \
+        # --extra-ff-ldflags="-L/usr/lib/jellyfin-ffmpeg -Wl,-rpath,/usr/lib/jellyfin-ffmpeg" \
         --disable-gl \
         --disable-sdl \
         --disable-xvideo \
