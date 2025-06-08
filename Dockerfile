@@ -7,7 +7,6 @@ ARG TARGET_ARCH=${DEBIAN_VERSION}_amd64
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
 VOLUME /root/.local/share/powershell/Modules
-ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
 
 # Copy project files early to make requirements.txt available in all stages
 COPY . /
@@ -187,6 +186,11 @@ RUN set -eux && \
 # Copy GPAC and CCExtractor binaries from build stages
 COPY --from=builder-gpac /usr/local /usr/local
 COPY --from=builder-ccextractor /usr/local /usr/local
+
+# Fix references
+ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && ldconfig
 
 # Final validation and Python package install
 RUN set -eux && \
