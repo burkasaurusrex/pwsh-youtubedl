@@ -24,6 +24,7 @@ RUN set -eux && \
         apt-transport-https \
         aria2 \
         bash \
+	ca-certificates \
         curl \
         intel-media-va-driver \
         libva2 \
