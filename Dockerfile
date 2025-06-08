@@ -58,7 +58,7 @@ RUN set -eux && \
 	libavformat-dev \
  	libavutil-dev \
   	libswscale-dev \
-   	libavresample-dev \
+	libswresample-dev \
         libssl-dev \
 	libpng-dev \
  	libjpeg-dev \
