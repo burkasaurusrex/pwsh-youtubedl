@@ -24,7 +24,6 @@ RUN set -eux && \
         apt-transport-https \
         aria2 \
         bash \
-	ca-certificates \
         curl \
         intel-media-va-driver \
         libva2 \
@@ -135,6 +134,11 @@ RUN set -eux && \
 
 # ---- Final Image ----
 FROM base AS final
+
+ARG DEBIAN_VERSION
+ARG REPO_OWNER
+ARG REPO_NAME
+ARG TARGET_ARCH
 
 # Explicitly copy requirements.txt for clarity
 COPY requirements.txt /requirements.txt
