@@ -119,6 +119,10 @@ RUN set -eux && \
         libfreetype6-dev \
         libfontconfig1-dev \
         libpng-dev \
+	libavcodec-dev \
+	libavformat-dev \
+	libavutil-dev \
+	libswresample-dev \
         zlib1g-dev \
         libtesseract-dev \
         libleptonica-dev && \
