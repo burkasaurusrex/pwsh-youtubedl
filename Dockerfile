@@ -189,8 +189,10 @@ COPY --from=builder-ccextractor /usr/local /usr/local
 
 # Fix references
 ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
-ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && ldconfig
+ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg:/usr/local/lib:$LD_LIBRARY_PATH
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
+    echo "/usr/lib/jellyfin-ffmpeg" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
+    ldconfig
 
 # Final validation and Python package install
 RUN set -eux && \
