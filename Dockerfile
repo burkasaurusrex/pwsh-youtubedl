@@ -42,7 +42,6 @@ RUN set -eux && \
         fonts-dejavu-core \
         fonts-noto-core \
         fonts-noto-color-emoji && \
-    rm -rf /var/lib/apt/lists/*
 
 # ---- Build GPAC ----
 FROM base AS builder-gpac
