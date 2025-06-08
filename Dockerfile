@@ -17,6 +17,7 @@ VOLUME /root/.local/share/powershell/Modules
 
 # ---- Base runtime packages (headless) ----
 RUN set -eux && \
+    export DEBIAN_VERSION=${DEBIAN_VERSION} && \
     echo 'APT::Install-Recommends "0";' >| /etc/apt/apt.conf && \
     echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
     apt-get update && \
