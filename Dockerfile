@@ -73,8 +73,8 @@ RUN set -eux && \
     cd /tmp && \
     rm -rf gpac && \
     # GPAC_TAG=$(curl -s https://api.github.com/repos/gpac/gpac/releases/latest | grep tag_name | cut -d '"' -f 4) && \
-    GPAC_TAG="2.2.1"
-    echo "Cloning GPAC tag ${GPAC_TAG}" && \
+    GPAC_TAG="2.2.1" && \
+    echo "GPAC tag: ${GPAC_TAG}" && \
     git clone --branch ${GPAC_TAG} https://github.com/gpac/gpac.git && \
     cd gpac && \
     ./configure \
@@ -169,7 +169,7 @@ RUN set -eux && \
         | grep "${TARGET_ARCH}\.deb" \
         | head -n 1 \
         | sed -E 's/.*"([^"]+)".*/\1/') && \
-    echo "DEB URL: $DEB_URL" && \
+    echo "jellyfin-ffmpeg URL: $DEB_URL" && \
     curl -L -o /tmp/${REPO_NAME}.deb "$DEB_URL" && \
     apt-get install -y /tmp/${REPO_NAME}.deb && \
     rm -f /tmp/${REPO_NAME}.deb && \
