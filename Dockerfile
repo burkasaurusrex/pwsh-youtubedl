@@ -12,8 +12,8 @@ ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV DEBIAN_VERSION=${DEBIAN_VERSION}
 ENV TARGET_ARCH=${DEBIAN_VERSION}_amd64
-ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
-ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/jellyfin-ffmpeg:/usr/local/lib"
+ENV PATH="$PATH:/usr/local/bin"
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 # ---- Volumes ----
 VOLUME /root/.local/share/powershell/Modules
@@ -51,39 +51,11 @@ RUN set -eux && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen && \
     update-locale LANG=en_US.UTF-8 && \
-    # Install Jellyfin-ffmpeg
-    DEB_URL=$(curl -s https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest \
-        | grep 'browser_download_url' \
-        | grep "${TARGET_ARCH}\.deb" \
-        | head -n 1 \
-        | sed -E 's/.*"([^"]+)".*/\1/') && \
-    echo "jellyfin-ffmpeg URL: $DEB_URL" && \
-    curl -L -o /tmp/jellyfin-ffmpeg.deb "$DEB_URL" && \
-    apt-get install -y /tmp/jellyfin-ffmpeg.deb && \
-    rm -f /tmp/jellyfin-ffmpeg.deb && \
-    # Fix references
-    echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
-    echo "/usr/lib/jellyfin-ffmpeg" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
-    ldconfig && \
-    # Test Jellyfin-ffmpeg binaries immediately
-    ffmpeg -version && \
-    # Install mkvtoolnix
-    cd /usr/share/keyrings && \
-    curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
-    cd / && \
-    echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" > /etc/apt/sources.list.d/mkvtoolnix.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends mkvtoolnix && \
-    # Test mkvtoolnix binaries immediately
-    mkvmerge --version && \
-    mkvinfo --version && \
-    mkvextract --version && \
-    mkvpropedit --version && \
     # Final base cleanup
     rm -rf /tmp/* /var/lib/apt/lists/*
 
-# ---- Build GPAC ----
-FROM base AS builder-gpac
+# ---- Build Jellyfin-FFmpeg ----
+FROM base AS builder-ffmpeg-jellyfin
 
 RUN set -eux && \
     apt-get update && \
@@ -94,11 +66,67 @@ RUN set -eux && \
         libtool \
         build-essential \
         pkg-config \
-        libavcodec-dev \
-        libavformat-dev \
-        libavutil-dev \
-        libswresample-dev \
-        libswscale-dev \
+        yasm \
+        nasm \
+        libssl-dev \
+        libfontconfig1-dev \
+        libfreetype6-dev \
+        libfribidi-dev \
+        libass-dev \
+        libvpx-dev \
+        libx264-dev \
+        libx265-dev \
+        libnuma-dev \
+        libvpl-dev \
+        libva-dev \
+        libvdpau-dev \
+        libxcb1-dev \
+        libxcb-shm0-dev \
+        libxcb-xfixes0-dev \
+        zlib1g-dev && \
+    cd /tmp && \
+    rm -rf jellyfin-ffmpeg && \
+    git clone --depth 1 https://github.com/jellyfin/jellyfin-ffmpeg.git && \
+    cd jellyfin-ffmpeg && \
+    ./configure \
+        --prefix=/usr/local \
+        --pkg-config-flags="--static" \
+        --extra-cflags="-I/usr/local/include" \
+        --extra-ldflags="-L/usr/local/lib" \
+        --extra-libs="-lpthread -lm" \
+        --enable-gpl \
+        --enable-version3 \
+        --enable-shared \
+        --enable-pic \
+        --enable-libfreetype \
+        --enable-libfribidi \
+        --enable-libass \
+        --enable-libvpx \
+        --enable-libx264 \
+        --enable-libx265 \
+        --enable-libvpl \
+        --enable-libva \
+        --enable-libvdpau \
+        --enable-libxcb \
+        --enable-libxcb-shm \
+        --enable-libxcb-xfixes && \
+    make -j$(nproc) && \
+    make install && \
+    ldconfig && \
+    rm -rf /tmp/* /var/lib/apt/lists/*
+
+# ---- Build GPAC ----
+FROM builder-ffmpeg-jellyfin AS builder-gpac
+
+RUN set -eux && \
+    apt-get update && \
+    apt-get install -y --allow-remove-essential \
+        git \
+        autoconf \
+        automake \
+        libtool \
+        build-essential \
+        pkg-config \
         libssl-dev \
         libpng-dev \
         libjpeg-dev \
@@ -113,10 +141,8 @@ RUN set -eux && \
     echo "GPAC tag: ${GPAC_TAG}" && \
     git clone --branch ${GPAC_TAG} https://github.com/gpac/gpac.git && \
     cd gpac && \
-    ./configure \
+    PKG_CONFIG_PATH=/usr/local/lib/pkgconfig ./configure \
         --disable-x11 \
-        --use-ffmpeg="/usr/lib/jellyfin-ffmpeg" \
-        # --extra-ff-ldflags="-L/usr/lib/jellyfin-ffmpeg -Wl,-rpath,/usr/lib/jellyfin-ffmpeg" \
         --disable-gl \
         --disable-sdl \
         --disable-xvideo \
@@ -173,7 +199,7 @@ RUN set -eux && \
     git clone https://github.com/CCExtractor/ccextractor.git && \
     cd ccextractor/linux && \
     ./autogen.sh && \
-    PKG_CONFIG_PATH=/usr/lib/jellyfin-ffmpeg/pkgconfig ./configure \
+    PKG_CONFIG_PATH=/usr/local/lib/pkgconfig ./configure \
         --enable-hardsubx \
         --enable-ocr \
         --enable-ffmpeg \
@@ -186,11 +212,14 @@ RUN set -eux && \
 FROM base AS final
 
 COPY requirements.txt /requirements.txt
+COPY --from=builder-ffmpeg-jellyfin /usr/local /usr/local
 COPY --from=builder-gpac /usr/local /usr/local
 COPY --from=builder-ccextractor /usr/local /usr/local
 
 RUN set -eux && \
     # Test binaries
+    ffmpeg -version && \
+    ffprobe -version && \
     MP4Box -version && \
     gpac -h && \
     ccextractor --version && \
