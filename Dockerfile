@@ -41,7 +41,8 @@ RUN set -eux && \
         fonts-liberation \
         fonts-dejavu-core \
         fonts-noto-core \
-        fonts-noto-color-emoji
+        fonts-noto-color-emoji && \
+    rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build GPAC ----
 FROM base AS builder-gpac
@@ -143,6 +144,7 @@ ARG TARGET_ARCH
 COPY requirements.txt /requirements.txt
 
 RUN set -eux && \
+    apt-get update && \
     # Install latest jellyfin-ffmpeg release
     DEB_URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
         | grep 'browser_download_url' \
