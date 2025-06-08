@@ -198,10 +198,10 @@ COPY --from=builder-gpac /usr/local /usr/local
 COPY --from=builder-ccextractor /usr/local /usr/local
 
 # Fix references
-ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg/lib:/usr/local/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/lib/jellyfin-ffmpeg:/usr/local/lib
 RUN set -eux && \
     echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
-    echo "/usr/lib/jellyfin-ffmpeg/lib" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
+    echo "/usr/lib/jellyfin-ffmpeg" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
     ldconfig && \
     MP4Box -version && \
     ccextractor --version
