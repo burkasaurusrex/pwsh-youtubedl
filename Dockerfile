@@ -123,6 +123,7 @@ RUN set -eux && \
 	libavformat-dev \
 	libavutil-dev \
 	libswresample-dev \
+ 	libswscale-dev \
         zlib1g-dev \
         libtesseract-dev \
         libleptonica-dev && \
