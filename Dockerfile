@@ -4,6 +4,9 @@ ARG DEBIAN_VERSION=bookworm
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
 
+# ---- Arguments ----
+ARG DEBIAN_VERSION
+
 # ---- Environment Variables ----
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
@@ -17,7 +20,6 @@ VOLUME /root/.local/share/powershell/Modules
 
 # ---- Base runtime packages (headless) ----
 RUN set -eux && \
-    export DEBIAN_VERSION=${DEBIAN_VERSION} && \
     echo 'APT::Install-Recommends "0";' >| /etc/apt/apt.conf && \
     echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
     apt-get update && \
