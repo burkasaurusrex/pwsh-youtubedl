@@ -1,2 +1,2 @@
-streamlink==7.3.0
+streamlink==7.4.0
 yt-dlp[default,curl-cffi]==2025.5.22
