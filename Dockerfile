@@ -75,8 +75,10 @@ RUN set -eux && \
     # Final base cleanup
     rm -rf /tmp/* /var/lib/apt/lists/*
 
-# ---- Build deps stage ----
-FROM base AS build-deps
+# ---- Build GPAC ----
+FROM base AS builder-gpac
+
+ARG GPAC_TAG=v2.2.1
 
 RUN set -eux && \
     apt-get update && \
@@ -102,14 +104,7 @@ RUN set -eux && \
         libfontconfig1-dev \
         libtesseract-dev \
         libleptonica-dev \
-        ffmpeg
-
-# ---- Build GPAC ----
-FROM build-deps AS builder-gpac
-
-ARG GPAC_TAG=v2.2.1
-
-RUN set -eux && \
+        ffmpeg && \
     cd /tmp && \
     rm -rf gpac && \
     echo "GPAC tag: ${GPAC_TAG}" && \
@@ -149,7 +144,7 @@ RUN set -eux && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build CCExtractor ----
-FROM build-deps AS builder-ccextractor
+FROM builder-gpac AS builder-ccextractor
 
 RUN set -eux && \
     cd /tmp && \
