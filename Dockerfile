@@ -172,7 +172,6 @@ COPY --from=builder-ccextractor /usr/local /usr/local
 RUN set -eux && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-        grep \
         libavcodec59 \
         libavformat59 \
         libavutil57 \
@@ -187,9 +186,9 @@ RUN set -eux && \
         libtesseract5 \
         libleptonica-dev && \
     rm -rf /var/lib/apt/lists/* && \
-    # Test that all dynamic deps are resolved
-    ldd /usr/local/bin/MP4Box | grep "not found" && \
-    ldd /usr/local/bin/ccextractor | grep "not found" && \
+    # Test that all dynamic deps are resolved (pure shell, no grep)
+    ldd /usr/local/bin/MP4Box | awk '/not found/ { exit 1 }' && \
+    ldd /usr/local/bin/ccextractor | awk '/not found/ { exit 1 }' && \
     # Test binaries
     MP4Box -version && \
     gpac -h && \
