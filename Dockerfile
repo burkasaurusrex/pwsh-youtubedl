@@ -204,7 +204,7 @@ RUN set -eux && \
     # Install Python requirements
     pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
     streamlink --version && \
-    youtube-dl --version
+    yt-dlp --version
 
 # Final entrypoint
 ENTRYPOINT ["pwsh", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='Continue';"]
