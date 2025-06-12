@@ -1,5 +1,5 @@
 # ---- Arguments ----
-ARG DEBIAN_VERSION=bookworm-slim
+ARG DEBIAN_VERSION=bookworm
 
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
