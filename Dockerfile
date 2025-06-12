@@ -69,9 +69,9 @@ RUN set -eux && \
     echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" > /etc/apt/sources.list.d/mkvtoolnix.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends mkvtoolnix && \
-    mkvmerge --version
-    mkvextract --version
-    mkvinfo --version
+    mkvmerge --version && \
+    mkvextract --version && \
+    mkvinfo --version && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build GPAC ----
