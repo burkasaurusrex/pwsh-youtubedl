@@ -61,6 +61,7 @@ RUN set -eux && \
     echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
     echo "/usr/lib/jellyfin-ffmpeg" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
     ldconfig && \
+    ffmpeg --version && \
     # Install mkvtoolnix
     cd /usr/share/keyrings && \
     curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
@@ -68,6 +69,9 @@ RUN set -eux && \
     echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" > /etc/apt/sources.list.d/mkvtoolnix.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends mkvtoolnix && \
+    mkvmerge --version
+    mkvextract --version
+    mkvinfo --version
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build GPAC ----
@@ -203,7 +207,6 @@ RUN set -eux && \
     ccextractor --version && \
     # Install Python requirements
     pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
-    streamlink --version && \
     yt-dlp --version
 
 # Final entrypoint
