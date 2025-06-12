@@ -168,7 +168,7 @@ COPY requirements.txt /requirements.txt
 COPY --from=builder-gpac /usr/local /usr/local
 COPY --from=builder-ccextractor /usr/local /usr/local
 
-# Add required ffmpeg shared libs only (no ffmpeg CLI)
+# Add required shared libs (no ffmpeg CLI) and test dynamic linking
 RUN set -eux && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -176,7 +176,19 @@ RUN set -eux && \
         libavformat59 \
         libavutil57 \
         libswresample4 \
-        libswscale6 && \
+        libswscale6 \
+        zlib1g \
+        libpng16-16 \
+        libjpeg62-turbo \
+        libfreetype6 \
+        libfontconfig1 \
+        libssl3 \
+        libtesseract5 \
+        libleptonica5 && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Test that all dynamic deps are resolved
+    ldd /usr/local/bin/MP4Box | grep "not found" && \
+    ldd /usr/local/bin/ccextractor | grep "not found" && \
     # Test binaries
     MP4Box -version && \
     gpac -h && \
