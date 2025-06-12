@@ -1,5 +1,5 @@
 # ---- Arguments ----
-ARG DEBIAN_VERSION=bookworm
+ARG DEBIAN_VERSION=bookworm-slim
 
 # ---- Base Image ----
 FROM mcr.microsoft.com/powershell:debian-${DEBIAN_VERSION} AS base
@@ -13,7 +13,7 @@ ENV LC_ALL=en_US.UTF-8
 ENV DEBIAN_VERSION=${DEBIAN_VERSION}
 ENV TARGET_ARCH=${DEBIAN_VERSION}_amd64
 ENV PATH="$PATH:/usr/lib/jellyfin-ffmpeg"
-ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/jellyfin-ffmpeg:/usr/local/lib"
+ENV LD_LIBRARY_PATH="/usr/lib/jellyfin-ffmpeg:/usr/local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 # ---- Volumes ----
 VOLUME /root/.local/share/powershell/Modules
@@ -24,14 +24,15 @@ RUN set -eux && \
     echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf && \
     apt-get update && \
     apt-get upgrade -y --allow-remove-essential && \
-    apt-get install -y --allow-remove-essential \
+    apt-get install -y --no-install-recommends \
         apt-transport-https \
         aria2 \
         bash \
         curl \
+        fonts-dejavu-core \
         intel-media-va-driver \
-        libva2 \
         libva-drm2 \
+        libva2 \
         locales \
         mediainfo \
         python3 \
@@ -41,12 +42,7 @@ RUN set -eux && \
         tzdata \
         unzip \
         webp \
-        zip \
-        # Known fonts for subtitle and emoji support
-        fonts-liberation \
-        fonts-dejavu-core \
-        fonts-noto-core \
-        fonts-noto-color-emoji && \
+        zip && \
     # Configure locale
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen && \
@@ -72,7 +68,6 @@ RUN set -eux && \
     echo "deb [signed-by=/usr/share/keyrings/gpg-pub-moritzbunkus.gpg] https://mkvtoolnix.download/debian/ ${DEBIAN_VERSION} main" > /etc/apt/sources.list.d/mkvtoolnix.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends mkvtoolnix && \
-    # Final base cleanup
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build GPAC ----
@@ -83,28 +78,28 @@ ARG GPAC_TAG=v2.2.1
 RUN set -eux && \
     apt-get update && \
     apt-get install -y --allow-remove-essential \
-        git \
         autoconf \
         automake \
-        libtool \
         build-essential \
-        pkg-config \
+        ffmpeg \
+        git \
         libavcodec-dev \
         libavformat-dev \
         libavutil-dev \
-        libswresample-dev \
-        libswscale-dev \
-        libssl-dev \
-        libpng-dev \
-        libjpeg-dev \
-        zlib1g-dev \
-        libtiff-dev \
         libcurl4-openssl-dev \
         libfreetype6-dev \
         libfontconfig1-dev \
-        libtesseract-dev \
+        libjpeg-dev \
         libleptonica-dev \
-        ffmpeg && \
+        libpng-dev \
+        libssl-dev \
+        libswresample-dev \
+        libswscale-dev \
+        libtesseract-dev \
+        libtiff-dev \
+        libtool \
+        pkg-config \
+        zlib1g-dev && \
     cd /tmp && \
     rm -rf gpac && \
     echo "GPAC tag: ${GPAC_TAG}" && \
@@ -141,6 +136,10 @@ RUN set -eux && \
         --enable-dev && \
     make -j$(nproc) && \
     make install && \
+    # Strip binaries to save space
+    strip /usr/local/bin/MP4Box || true && \
+    strip /usr/local/bin/gpac || true && \
+    strip /usr/local/lib/libgpac.so.* || true && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Build CCExtractor ----
@@ -159,35 +158,44 @@ RUN set -eux && \
         --without-rust && \
     make -j$(nproc) && \
     make install && \
+    # Strip binary
+    strip /usr/local/bin/ccextractor || true && \
     rm -rf /tmp/* /var/lib/apt/lists/*
 
 # ---- Final Image ----
 FROM base AS final
 
 COPY requirements.txt /requirements.txt
-COPY --from=builder-gpac /usr/local /usr/local
-COPY --from=builder-ccextractor /usr/local /usr/local
 
-# Add required shared libs (no ffmpeg CLI) and test dynamic linking
+# Selective COPY — only needed binaries and libs
+COPY --from=builder-gpac /usr/local/bin/gpac /usr/local/bin/gpac
+COPY --from=builder-gpac /usr/local/bin/MP4Box /usr/local/bin/MP4Box
+COPY --from=builder-gpac /usr/local/lib/libgpac.so.* /usr/local/lib/
+COPY --from=builder-gpac /usr/local/lib/gpac /usr/local/lib/gpac
+COPY --from=builder-ccextractor /usr/local/bin/ccextractor /usr/local/bin/ccextractor
+
+# Add required shared libs and test dynamic linking
 RUN set -eux && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         libavcodec59 \
         libavformat59 \
         libavutil57 \
+        libfontconfig1 \
+        libfreetype6 \
+        libjpeg62-turbo \
+        libpng16-16 \
+        libssl3 \
         libswresample4 \
         libswscale6 \
-        zlib1g \
-        libpng16-16 \
-        libjpeg62-turbo \
-        libfreetype6 \
-        libfontconfig1 \
-        libssl3 \
         libtesseract5 \
-        libleptonica-dev && \
+        libleptonica-dev \
+        zlib1g && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     # Test that all dynamic deps are resolved (pure shell, no grep)
     ldd /usr/local/bin/MP4Box | awk '/not found/ { exit 1 }' && \
+    ldd /usr/local/bin/gpac | awk '/not found/ { exit 1 }' && \
     ldd /usr/local/bin/ccextractor | awk '/not found/ { exit 1 }' && \
     # Test binaries
     MP4Box -version && \
@@ -196,7 +204,7 @@ RUN set -eux && \
     # Install Python requirements
     pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
     streamlink --version && \
-    yt-dlp --version
+    youtube-dl --version
 
 # Final entrypoint
 ENTRYPOINT ["pwsh", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='Continue';"]
