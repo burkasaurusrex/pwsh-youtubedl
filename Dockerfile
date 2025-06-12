@@ -168,7 +168,15 @@ COPY requirements.txt /requirements.txt
 COPY --from=builder-gpac /usr/local /usr/local
 COPY --from=builder-ccextractor /usr/local /usr/local
 
+# Add required ffmpeg shared libs only (no ffmpeg CLI)
 RUN set -eux && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libavcodec59 \
+        libavformat59 \
+        libavutil57 \
+        libswresample4 \
+        libswscale6 && \
     # Test binaries
     MP4Box -version && \
     gpac -h && \
