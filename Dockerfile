@@ -172,6 +172,7 @@ COPY --from=builder-ccextractor /usr/local /usr/local
 RUN set -eux && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
+        grep \
         libavcodec59 \
         libavformat59 \
         libavutil57 \
