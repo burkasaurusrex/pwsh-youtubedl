@@ -61,7 +61,7 @@ RUN set -eux && \
     echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
     echo "/usr/lib/jellyfin-ffmpeg" > /etc/ld.so.conf.d/jellyfin-ffmpeg.conf && \
     ldconfig && \
-    ffmpeg --version && \
+    ffmpeg -version && \
     # Install mkvtoolnix
     cd /usr/share/keyrings && \
     curl -O https://mkvtoolnix.download/gpg-pub-moritzbunkus.gpg && \
