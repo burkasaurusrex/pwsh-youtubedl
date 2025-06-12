@@ -184,7 +184,7 @@ RUN set -eux && \
         libfontconfig1 \
         libssl3 \
         libtesseract5 \
-        libleptonica5 && \
+        libleptonica-dev && \
     rm -rf /var/lib/apt/lists/* && \
     # Test that all dynamic deps are resolved
     ldd /usr/local/bin/MP4Box | grep "not found" && \
