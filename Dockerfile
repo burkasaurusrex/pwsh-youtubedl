@@ -172,11 +172,11 @@ FROM base AS final
 COPY requirements.txt /requirements.txt
 
 # Selective COPY — only needed binaries and libs
-COPY --from=builder-gpac /usr/local/bin/gpac /usr/local/bin/gpac
-COPY --from=builder-gpac /usr/local/bin/MP4Box /usr/local/bin/MP4Box
-COPY --from=builder-gpac /usr/local/lib/libgpac.so.* /usr/local/lib/
-COPY --from=builder-gpac /usr/local/lib/gpac /usr/local/lib/gpac
-COPY --from=builder-ccextractor /usr/local/bin/ccextractor /usr/local/bin/ccextractor
+# COPY --from=builder-gpac /usr/local/bin/gpac /usr/local/bin/gpac
+# COPY --from=builder-gpac /usr/local/bin/MP4Box /usr/local/bin/MP4Box
+# COPY --from=builder-gpac /usr/local/lib/libgpac.so.* /usr/local/lib/
+# COPY --from=builder-gpac /usr/local/lib/gpac /usr/local/lib/gpac
+# COPY --from=builder-ccextractor /usr/local/bin/ccextractor /usr/local/bin/ccextractor
 
 # Add required shared libs and test dynamic linking
 RUN set -eux && \
