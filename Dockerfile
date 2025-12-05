@@ -207,13 +207,9 @@ RUN set -eux && \
     # ccextractor --version && \
     # Install deno
     curl -fsSL https://deno.land/install.sh | sh && \
-    
-# Add Deno to PATH
-ENV DENO_INSTALL="/root/.deno"
-ENV PATH="${DENO_INSTALL}/bin:${PATH}"
-    
-# Verify installation
-RUN deno --version && \
+    export DENO_INSTALL="/root/.deno" && \
+    export PATH="$DENO_INSTALL/bin:$PATH" && \
+    deno --version && \
     # Install Python requirements
     pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
     yt-dlp --version
