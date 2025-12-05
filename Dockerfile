@@ -205,6 +205,15 @@ RUN set -eux && \
     # MP4Box -version && \
     # gpac -h && \
     # ccextractor --version && \
+    # Install deno
+    curl -fsSL https://deno.land/install.sh | sh && \
+    
+# Add Deno to PATH
+ENV DENO_INSTALL="/root/.deno"
+ENV PATH="${DENO_INSTALL}/bin:${PATH}"
+    
+# Verify installation
+RUN deno --version && \
     # Install Python requirements
     pip3 install --no-cache-dir --upgrade --requirement /requirements.txt --break-system-packages && \
     yt-dlp --version
